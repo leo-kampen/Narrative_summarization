@@ -1,0 +1,47 @@
+#FINAL LEVELS GRAPH
+
+import matplotlib.pyplot as plt
+import numpy as np
+
+# Data for the levels
+levels = ['Level 1', 'Level 2', 'Level 3', 'Level 4']
+openai_level_scores = [3.878545455, 3.808909091, 3.920727273, 4.002424242]
+google_palm_level_scores = [3.685555556, 3.676666667, 3.678888889, 
+3.734444444]
+metaai_llama2_level_scores = [3.704451613, 3.723763441, 3.783827957, 
+3.83283871]
+
+# Set the figure size
+plt.figure(figsize=(10, 5))
+
+# Create bar graphs for each LLM with different colors and positions
+x = np.arange(len(levels))
+width = 0.2
+
+bars1 = plt.bar(x - width, openai_level_scores, color='blue', alpha=0.7, 
+width=width)
+bars2 = plt.bar(x, google_palm_level_scores, color='red', alpha=0.7, 
+width=width)
+bars3 = plt.bar(x + width, metaai_llama2_level_scores, 
+color='green', alpha=0.7, width=width)
+
+# Set y-axis limits
+plt.ylim(1, 5)
+
+# Add title and labels
+plt.title('Comparison of LLMs Levels', fontsize=20)
+plt.xlabel('Level')
+plt.ylabel('Scores (1-5 scale)')
+
+# Add grid lines
+plt.grid(axis='y', linestyle='--', linewidth=0.5)
+
+
+# Set x-axis ticks to match the levels
+plt.xticks(x, levels)
+
+# Add legend
+plt.legend([bars1[0], bars2[0], bars3[0]], ['OpenAI GTP', 'Google PaLM', 
+'MetaAI Llama2'])
+
+plt.show()

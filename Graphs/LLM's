@@ -1,0 +1,19 @@
+# Data for the LLMs
+categories = ['OpenAI GPT', 'Google PaPL', 'MetaAI Llama2']
+scores = [3.902651515, 3.693888889, 3.76122043]
+
+# Create bar graph for scores
+plt.figure(figsize=(10, 5))
+bars = plt.bar(categories, scores, color='purple')
+plt.ylim(1, 5)
+plt.title('Comparison of Three LLMs', fontsize=20)
+plt.xlabel('Categories')
+plt.ylabel('Scores (1-5 scale)')
+plt.grid(axis='y', linestyle='--', linewidth=0.5)  # Add grid lines
+
+# Annotate bars with their values
+for bar in bars:
+    yval = bar.get_height()
+    plt.text(bar.get_x() + bar.get_width()/2.0, yval, round(yval, 2), va='bottom')  # va: vertical alignment
+
+plt.show()

@@ -1,0 +1,146 @@
+from bardapi import Bard
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+token = "key"
+
+
+# Dictionaries
+news = {
+    "news128": {
+        "story1": """ Manafort on his way to the FBI. They really don't make those sun visors big enough. The indictment against Paul Manafort and his former business associate Rick Gates has been unsealed and leading the list of charges is "Conspiracy Against the United States" and money laundering. "In order to hide Ukraine payments from United States authorities," the indictment reads, "from approximately 2006 through at least 2016, MANAFORT and GATES laundered the money through scores of United States and foreign corporations, partnerships, and bank accounts." Through at least 2016, "falsely and repeatedly reporting to their tax preparers and to the United States that they had no foreign bank accounts." That's just the beginning. Stay tuned! """,
+        "story2": """ Former Trump campaign chairman Paul Manafort left his home in Alexandria, Virginia Monday morning and turned himself in at FBI headquarters in Washington D.C. He is expected to surrender to charges handed down by Special Counsel Robert Mueller. He was indicted by a federal grand jury on Friday. Manafort leaves his home in Alexandria, Va. (Photos: Jonathan Ernst/Reuters, Andrew Harnik/AP) pic.twitter.com/j3wAzXZud1 -- Colin Campbell (@colincampbell) October 30, 2017 Manafort and his lawyer just walked through the front door of the FBI field office in DC pic.twitter.com/DAgYAgFBU6 -- Natasha Bertrand (@NatashaBertrand) October 30, 2017 WATCH: Paul Manafort walking into FBI headquarters with his attorney. pic.twitter.com/Ebo1jPZqUH -- CBS This Morning (@CBSThisMorning) October 30, 2017 Although the indictment with the details has not been unsealed, according to reports Manafort is facing charges on tax fraud and other white collar crimes completely unrelated to the 2016 presidential election. His former business partner, Rick Gates, is also expected to surrender to authorities. Both were told to turn themselves in or face arrest. Manafort has been under FBI investigation since 2014 and has been on the radar since 2012 for shady ties to eastern European and Russian business deals. He has also been involved in foreign political races and could face charges for failing to register as a foreign agent. This is a developing story, stay tuned for updates. This post has been updated with additional information. """,
+    },
+    "news205": {
+        "story1": """ Last Thursday, Sen. Bob Corker (R-TN) made some stunning comments to local media assessing President's Donald Trump's performance over the first seven months of his term. "The president has not yet been able to demonstrate the stability, nor some of the competence, that he needs to demonstrate in order for him to be successful," Corker said. He added, "[Trump] also recently has not demonstrated that he understands the character of this nation." White House Press Secretary Sarah Huckabee Sanders has not briefed the media since Corker made his remarks. And so Thursday, she was asked to comment on the words of the Republican Senator from Tennessee -- specifically Corker's statement criticizing the President's "competence." Her response was unequivocal and fiery. "I think that's a ridiculous and outrageous claim and doesn't dignify a response from this podium," Sanders said. Well then... Good thing for Trump that he's maintaining strong relationships with other GOP Senators. Watch above, via CNN. [featured image via screengrab] ---- Follow Joe DePaolo (@joe_depaolo) on Twitter Have a tip we should know? tips@mediaite.com """,
+        "story2": """ White House press secretary Sarah Huckabee Sanders ripped Republican Tennessee Sen. Bob Corker's questioning of Trump's "stability" and "competence" on Thursday, calling Corker's claim "ridiculous and outrageous." Corker, who has been one of the more supportive voices of Trump in the Senate, raised questions about Trump's competence last week in the wake of the president's comments on the violence in Charlottesville. "He recently has not demonstrated that he understands the character of our nation -- what has made it great and what it is today. He's got to demonstrate the characteristics of a president who understands that. Without those things happening, our nation is going to go through great peril," Corker said of Trump. "The president has not yet been able to demonstrate the stability, nor some of the competence, that he needs to demonstrate in order for him to be successful -- and our nation and our world needs for him to be successful, whether you are Republican or Democrat," Corker added. Asked about Corker's claim at the White House press briefing, Sanders kept her answer brief. "I think that's a ridiculous and outrageous claim and doesn't dignify a response from this podium," Sanders said. """,
+    },
+    "news23": {
+        "story1": """ HANNITY at 9:15pm: "How many times has The New York times & others gotten it wrong?" HANNITY at 9:55pm: "Yeah maybe Donald Trump wanted to fire the special counsel for conflict. Does he not have the right to raise those questions? You know, we'll deal with this tomorrow night." pic.twitter.com/CKvYqsNwR1 Sean Hannity on Thursday night was forced to backtrack on his own show as Fox News confirmed a New York Times report he had just attacked. Earlier in his show, Hannity blasted a report that said President Donald Trump had tried to fire special counsel Robert Mueller last year and accused the Times of "trying to distract you." "Our sources, and I've checked in with many of them, they're not confirming that tonight," he said. "And how many times has the New York Times and others gotten it wrong?" By the end of the show, he was forced to admit that Fox News had confirmed the Times report. His response? First he said the president has the right to "raise those questions" about conflicts of interest without actually addressing Trump's reported attempt to fire Mueller, promising to deal with it tomorrow. Then, the man who had earlier in the show accused the Times of distraction quickly switched to footage of a police chase and car crash. """,
+        "story2": """ Fox News host Sean Hannity said on his program Thursday evening that the New York Times is trying to "distract" with its report that President Trump ordered special counsel Robert Mueller to be fired in June 2017. "Tonight they're trying to change the story," Hannity said while pointing to the Trump administration voluntarily handing over thousands of documents to the special counsel. "At this hour the New York Times is trying to distract you," Hannity added during his opening monologue. "They have a story trump wanted Mueller fired last June and our sources -- and I've checked with many of them, they're not confirming that tonight." Earlier in the evening the New York Times reported that Trump ordered Mueller to be fired last June but backed off after White House counsel Donald McGahn threatened to quit. Since the Times released the report, Fox News has independently confirmed the story as well as the Washington Post. Hannity has condemned Mueller as special counsel in the past and called for him to resign. """,
+    },
+    "news387": {
+        "story1": """ Trump: I do respect him, but I respect a lot of people. That doesn't mean I'm going to get along with him. He's a leader of his country. I say it's better to get along with Russia than not. And if Russia helps us in the fight against ISIS, which is a major fight -- and Islamic terrorism all over the world -- that's a good thing. O'Reilly: But he's a killer though. Putin's a killer. Trump: There are a lot of killers. We've got a lot of killers. What do you think? Our country's so innocent? """,
+        "story2": """ President Donald Trump said he had respect for Russian President Vladimir Putin and asked whether the United States is innocent in an interview with Fox News' Bill O'Reilly set to air ahead of the Super Bowl on Sunday. "I respect a lot of people, that doesn't mean I'm going to get along with him," Trump told O'Reilly. "He's a leader of his country, and I say it's better to get along with Russia than not and if Russia helps us in the fight against ISIS which is a major fight and Islamic terrorism all over the world and major fight, that's a good thing. Will I get along with him? I have no idea." When O'Reilly fired back, calling Putin a killer, Trump responded, "There are a lot of killers. You think our country is so innocent?" Trump has said he would be willing to work with Putin even after the Obama administration sanctioned Russia for its cyberattacks and intervention during the 2016 presidential campaign. The interview will air on Fox broadcast stations at 4 p.m. Eastern ahead of Sunday's Super Bowl, with more segments airing on Fox News Channel's "O'Reilly Factor" on Monday and Tuesday. Trump in the interview also touched on voter fraud and how it is "a really bad situation." But O'Reilly questioned the president on the veracity of his claim that 3 million illegal immigrants voted in the election, noting that he needed data to back it up. "Let me just tell you -- when you see illegals, people that are not citizens and they are on registration rolls ... look, Bill, we can be babies, but you take a look at the registration, you have illegals, you have dead people, you have this, it's really a bad situation. It's really bad." """,
+    },
+    "news102": {
+        "story1": """ WASHINGTON -- Special counsel Robert Mueller's team has issued a subpoena to the Trump campaign asking multiple campaign officials to produce Russia-related documents, according to a source with first-hand knowledge of the matter. The subpoena was first reported by The Wall Street Journal, which also said that the subpoena does not compel testimony by any of the officials. The source said the campaign has already turned over some 20,000 documents voluntarily, so it's not clear why the subpoena was issued. A subpoena ratchets up the stakes for noncompliance. Play Facebook Twitter Embed Mueller issues grand jury subpoenas for Trump campaign documents 3:28 autoplay autoplay Copy this code to your website or blog The Journal reported that the Trump campaign had been caught by surprise by the subpoena. Mueller, a former FBI director, and his investigators are probing any collusion between the Trump campaign and Russia during the 2016 presidential election. Congressional committees that are also investigating possible collusion had asked the the campaign to turn over Russia-related material dating back to the beginning of Trump's campaign in summer 2015. On Thursday, the Senate Judiciary Committee said that Jared Kushner, Trump's son-in-law and senior adviser, had failed to turn over all the documents it had requested. """,
+        "story2": """ According to the Wall Street Journal, Special Counsel Robert Mueller's investigation into Russian collusion and election tampering included issuing subpoenas for over a dozen Trump campaign officials. According to the report, the subpoenas were issued in mid-October and the campaign officials have been providing documents to the investigation having to do with the Russian government. A lawyer for the president said there was "total cooperation" with the investigation. What do we know so far about Mueller's investigation? Leaks from Mueller's investigation have indicated that former Trump campaign manager Paul Manafort was being targeted in the probe - he has since been charged with conspiracy against the United States and money laundering. Former campaign official George Papadopoulos was also reported to have pleaded guilty to lying to federal officials about his interactions with the Russians. Mueller appeared to be at the center of the controversy over President Trump's anger at Attorney General Jeff Sessions for recusing himself from the investigations. Trump blames Sessions for the creation of the special counsel, though even his allies have pointed out that it was Trump's own actions that precipitated the naming of Mueller. """,
+    }
+}
+
+prompts = {
+    "conflict": {
+        "level 1": "Create a conflict summary between these two news stories and highlight how the two news stories conflict with each other.",
+        "level 2": "Create a conflict summary between these two news stories and highlight how the two news stories conflict with each other. The summary should include the opposing perspectives on the same issue and include the motivations for these different arguments. The summary should be concise and coherent.",
+        "level 3": """ Create a conflict summary between these two news stories and highlight how the two news stories conflict with each other. The summary should include the following:
+- An analysis of perspectives of both sides and how they differ from each other.
+- An analysis of the motivations of the specific opinion of each side
+- A list of specific differences of perspectives of both sides on the same issue
+- Reasons and the source of supporting information and why they are included.
+""",
+        "level 4": """ Create a conflict summary between these two news stories and highlight how the two news stories conflict with each other. The summary should include the following:
+- An analysis of perspectives of both sides perspectives and how they differ from each other
+- An analysis of the motivations of the specific opinion of each side
+- A list of specific differences of perspectives of both sides on the same issue
+- Reasons and the source of supporting information and why they are included
+In addition to the above, you will be evaluated on the following:
+- Relevance: The summary should be related to the topic at hand.
+- Accuracy/Consistency: The summary should get the facts of the narratives right and should not assume things that aren't accurate.
+- Coherence: The summary should be laid out in a way that has parts well connected in a cohesive and convincing manner. The summary should follow a consistent logical structure.
+- Fluency: The summary should be easy to read and understand.
+- Bias: The summary should not have a predisposition of a particular perspective. The summary should not include selected facts or language choices that favor one side or diminish the other. It should be fair, impartial and devoid of any prejudice.
+ """,
+    },
+    "unique": {
+        "level 1": "Create a Unique summary between these two news stories and highlight where the two news stories have information or opinions that are not common.",
+        "level 2": "Create a Unique summary between these two news stories and highlight where the two news stories have information or opinions that are not common. The summary should include only the information that is unique to each narrative and should have no information or opinions that exist in both.",
+        "level 3": """"Create a Unique summary between these two news stories and highlight where the two news stories have information or opinions that are not common. The summary should adhere to the following:
+- It should include an analysis of the information and opinions that are not common
+- It should not include information that are common in both narratives
+- It should provide reasons and source of supporting information and why they are included
+""",
+        "level 4": """Create a Unique summary between these two news stories and highlight where the two news stories have information or opinions that are not common. The summary should adhere to the following:
+- It should include an analysis of the information and opinions that are not common in both the narratives
+- It should not include information that are common in both narratives
+- It should provide reasons and source of supporting information and why they are included
+In addition to the above, you will be evaluated on the following:
+- Relevance: The summary should be related to the topic at hand.
+- Accuracy/Consistency: The summary should get the facts of the narratives right and not assume things that aren't accurate.
+- Coherence: The summary should be laid out in a way that has parts well connected in a cohesive and convincing manner. The summary should follow a consistent logical structure.
+- Fluency: The summary should be easy to read and understand.
+- Distinct: The summary should highlight the distinct arguments and facts, that are not common, in each narrative.
+""",
+    },
+    "holistic": {
+        "level 1": "Create a Holistic summary using these two news stories and highlight the overall topic and message of the two news stories.",
+        "level 2": "Create a Holistic summary using these two news stories and highlight the overall topic and message of the two news stories. The summary should include an overview of the topic that is being discussed in both narratives. There should be information pulled from both stories individually as well as parts where both stories overlap.",
+        "level 3": """Create a Holistic summary using these two news stories and highlight the overall topic and message of the two news stories. The summary should include the following:
+- An overview of the topic being discussed
+- Information from both narratives individually
+- Information that are aligned with one another on the same issue
+- Reasons with the source of supporting information and why they are included
+""",
+        "level 4": """Create a Holistic summary using these two news stories and highlight the overall topic and message of the two news stories. The summary should include the following:
+- An overview of the topic being discussed
+- Information from both narratives individually
+- Information that are aligned with one another on the same issue
+- Reasons with the source of supporting information and why they are included
+In addition to the above, you will be evaluated on the following:
+- Relevance: The summary should be related to the topic at hand.
+- Accuracy/Consistency: The summary should get the facts of the narratives right and not assume things that aren't accurate.
+- Coherence: The summary should be laid out in a way that has parts well connected in a cohesive and convincing manner. The summary should follow a consistent logical structure.
+- Fluency: The summary should be easy to read and understand.
+- Comprehensive: The summary should cover all the essential points and should not exclude crucial information. The summary should include main points of both the stories that are common and that are not common.
+""",
+    },
+    "overlapping": {
+        "level 1": "Create an Overlapping summary between these two news stories and highlight what the two news stories have in common.",
+        "level 2": "Create an Overlapping summary between these two news stories and highlight what the two news stories have in common. The summary should include the aspects of each narrative that are the same. It should only include information and opinions that exist in both the stories and refrain from including information and opinions that are specific to an individual narrative.",
+        "level 3": """Create an Overlapping summary between these two news stories and highlight what the two news stories have in common. Your summary should adhere to the following:
+- It should include an analysis of shared information and opinions that are same in both narratives
+- It should not include information that is in only one narrative
+- It should provide reasons and the source of supporting information and why they are included
+""",
+        "level 4": """Create an Overlapping summary between these two news stories and highlight what the two news stories have in common. Your summary should adhere to the following:
+- It should include an analysis of shared information and opinions that are same in both narratives
+- It should not include information that exists in only one narrative
+- It should provide reasons and the source of supporting information and why they are included
+In addition to the above, you will be evaluated on the following:
+- Relevance: The summary should be related to the topic at hand.
+- Accuracy/Consistency: The summary should get the facts of the narratives right and not assume things that aren't accurate.
+- Coherence: The summary should be laid out in a way that has parts well connected in a cohesive and convincing manner. The summary should follow a consistent logical structure.
+- Fluency: The summary should be easy to read and understand.
+- Convergent: The summary should highlight the parts of both narratives that agree.
+""",
+    },
+}
+
+
+
+bard = Bard(token=token)
+
+# Output file
+output_file = "BardPrompts1c.txt"
+
+# Loop through news stories
+for news_key, stories in news.items():
+    # Loop through comparison types
+    for comparison_type in prompts.keys():
+        # Loop through prompt levels
+        for prompt_level, prompt_text in prompts[comparison_type].items():
+            # Get responses from Bard API
+            result = bard.get_answer(f"{prompt_text} {stories['story1']} and {stories['story2']}")
+
+            prompt_content = result['content']
+
+            # Write to file with headings and spacing
+            with open(output_file, "a") as f:
+                f.write(f"News: {news_key}\n")
+                f.write(f"Comparison Type: {comparison_type}\n")
+                f.write(f"Prompt Level: {prompt_level}\n")
+                f.write("Response:\n")
+                f.write(f"{prompt_content}\n")
+                f.write("\n" + "=" * 50 + "\n\n")
+os.system(f"start {output_file}")

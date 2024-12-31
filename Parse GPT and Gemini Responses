@@ -1,0 +1,66 @@
+from zipfile import ZipFile
+
+responses = 
+#Example input
+"""
+News: news128
+Comparison Type: conflict
+Prompt Level: level 1
+Response:
+The first news story highlights the unsealing of an indictment against Paul Manafort and Rick Gates, charging them with conspiracy against the United States and money laundering. It mentions their alleged activities of hiding Ukraine payments and falsifying tax information. The tone suggests that there may be more charges to come.
+
+The second news story focuses on Manafort turning himself in at the FBI headquarters in Washington D.C. It mentions that he is expected to face charges unrelated to the 2016 presidential election, such as tax fraud and other white collar crimes. It also states that Manafort has been under FBI investigation since 2014 and has a history of questionable business deals.
+
+The conflict between the two news stories lies in their emphasis on different aspects of the situation. The first story suggests that Manafort and Gates are facing charges of conspiracy against the United States and money laundering, indicating a potentially substantial case against them. However, the second story downplays the significance of these charges and instead focuses on unrelated crimes, suggesting that the charges may be less serious and maybe even politically motivated. It also brings up Manafort's previous FBI investigation and questionable business deals, implying a long history of suspicious activities. Overall, the conflict arises from differing interpretations and emphasis on the charges and implications against Manafort and Gates.
+
+==================================================
+"""
+
+# Split the responses into individual sections
+response_sections = responses.strip().split("==================================================")
+
+# Create dictionaries to store encountered titles and their counts
+encountered_titles = {}
+titles_counts = {}
+
+# Create .txt files for each response section
+for i, response_section in enumerate(response_sections):
+    lines = response_section.strip().split('\n')
+
+    try:
+        # Check if there are at least 2 lines
+        if len(lines) >= 2:
+            title = lines[1].split(": ")[1].replace(" ", "").replace(":", "-")
+            if title not in encountered_titles:
+                encountered_titles[title] = 1
+                titles_counts[title] = 1
+            else:
+                titles_counts[title] += 1
+            count = titles_counts[title]
+            if count == 1:  # Add -1 for the first file
+                filename = f"{title}-1.txt"
+            else:
+                filename = f"{title}-{count}.txt"
+
+            with open(filename, 'w') as file:
+                file.write(response_section.strip())
+
+            # Print the filename for confirmation
+            print(f"Created file: {filename}")
+
+            # Download the file
+            files.download(filename)
+        else:
+            print(f"Skipping response section {i} due to insufficient lines.")
+    except IndexError:
+        print(f"Error in response section {i}: {lines}")
+
+# Zip the individual .txt files
+with ZipFile('individual_responses.zip', 'w') as zip_file:
+    for title, count in titles_counts.items():
+        for i in range(1, count + 1):
+            if i == 1:
+                filename = f"{title}-1.txt"
+            else:
+                filename = f"{title}-{i}.txt"
+            zip_file.write(filename)

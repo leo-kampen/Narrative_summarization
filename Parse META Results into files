@@ -1,0 +1,74 @@
+import re
+import zipfile
+
+# Example input text (replace with your actual input text)
+input_text = """ Example Text"""
+
+
+def save_prompts_to_files(input_text):
+    # Split the text into different prompt types
+    prompt_pattern = re.compile(r'Processing prompt key: (\w+):')
+    sections = prompt_pattern.split(input_text)[1:]  # Split and remove the first empty part
+
+    # List of specific texts that are redundent at the beginning of each input text that will be taken out of the final file
+    search_texts = [
+        """ Example redundant text"""
+
+    ]
+
+
+
+    # Initialize zip file counter
+    zip_counter = 1
+
+    # Initialize zip file
+    with zipfile.ZipFile(f"prompts_{zip_counter}.zip", 'w') as zipf:
+        for i in range(0, len(sections), 2):
+            prompt_type = sections[i].strip()
+            prompt_content = sections[i + 1].strip()
+
+            # Extract level and type from prompt content
+            level_pattern = re.compile(r'Level (\d) prompt:')
+            levels = level_pattern.split(prompt_content)[1:]
+
+            for j in range(0, len(levels), 2):
+                level = levels[j].strip()
+                content = levels[j + 1].strip()
+
+
+
+                 # Create replacement response dynamically for a header of the file (Replace News)
+                replacement_response = f"""
+News: news387
+Comparison Type: {prompt_type}
+Prompt Level: {level}
+Response: """
+
+                # Replace any occurrence of the search texts with the replacement response
+                for search_text in search_texts:
+                    if search_text in content:
+                        content = content.replace(search_text, replacement_response)
+
+                 # Delete any occurrence of the delete texts
+                for delete_text in delete_texts:
+                    if delete_text in content:
+                        content = content.replace(delete_text, "")
+
+
+
+                # Create filename based on level, type, and zip_counter
+                filename = f"Level_{level}_prompt_{prompt_type}_{zip_counter}.txt"
+
+                # Write content to file
+                with open(filename, 'w') as file:
+                    file.write(content)
+
+                # Add file to zip
+                zipf.write(filename, arcname=filename)
+                print(f"Saved and added to zip: {filename}")
+
+        # Increment zip_counter for next set of prompts
+        zip_counter += 1
+        print(f"All prompts saved and zipped as prompts_{zip_counter}.zip")
+
+save_prompts_to_files(input_text)
